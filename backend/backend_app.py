@@ -18,7 +18,7 @@ def get_posts():
 def add_post():
     data = request.get_json()
     if not data:
-        return jsonify({"error": "No JSON data provided"}), 400
+        return jsonify({"error": "No JSON data provided."}), 400
     title = data.get('title')
     content = data.get('content')
     if title and content:
@@ -28,10 +28,32 @@ def add_post():
         return jsonify(post), 201
     else:
         # I hope this is enough to inform the user
-        return jsonify({"error": "You have to enter both: title and content"}), 400
+        return jsonify({"error": "You have to enter both: title and content."}), 400
 
+
+#I don't like to use just id cause of potential shadowing but by task it shall be id
+@app.route('/api/posts/<int:id>', methods=['DELETE'])
+def delete_post(id):
+    post = get_post(id)
+    if not post:
+        return jsonify({"error": "There is no post by given id."}), 404
+    POSTS.remove(post)
+    return jsonify({"message": f"Post with id {id} has been deleted successfully."}), 200
+
+
+def get_post(post_id):
+    """
+    This function will return a specific post by given id if possible.
+    """
+    for post in POSTS:
+        if post['id'] == post_id:
+            return post
+    return None
 
 def generate_post_id():
+    """
+    This function will generate a new post_id.
+    """
     if POSTS:
         return POSTS[-1]["id"] + 1
     return 1
