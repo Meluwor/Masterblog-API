@@ -36,9 +36,28 @@ def add_post():
 def delete_post(id):
     post = get_post(id)
     if not post:
-        return jsonify({"error": "There is no post by given id."}), 404
+        return jsonify({"error": f"There is no post by given id:{id}."}), 404
     POSTS.remove(post)
     return jsonify({"message": f"Post with id {id} has been deleted successfully."}), 200
+
+
+@app.route('/api/posts/<int:id>', methods=['PUT'])
+def update_post(id):
+    data = request.get_json()
+    if not data:
+        #the post haven't changed
+        return jsonify({"message": f"There were no changes."}), 200
+    post = get_post(id)
+    if not post:
+        return jsonify({"error": f"There is no post by given id:{id}."}), 404
+    title = data.get('title')
+    if title:
+        post['title'] = title
+    content = data.get('content')
+    if content:
+        post['content'] = content
+
+    return jsonify(post), 200
 
 
 def get_post(post_id):
@@ -49,6 +68,7 @@ def get_post(post_id):
         if post['id'] == post_id:
             return post
     return None
+
 
 def generate_post_id():
     """
