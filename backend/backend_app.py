@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -12,7 +12,29 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
-    return jsonify(POSTS)
+        return jsonify(POSTS)
+
+@app.route('/api/posts', methods=['POST'])
+def add_post():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No JSON data provided"}), 400
+    title = data.get('title')
+    content = data.get('content')
+    if title and content:
+        post_id = generate_post_id()
+        post = {'id': post_id, 'title': title, 'content': content}
+        POSTS.append(post)
+        return jsonify(post), 201
+    else:
+        # I hope this is enough to inform the user
+        return jsonify({"error": "You have to enter both: title and content"}), 400
+
+
+def generate_post_id():
+    if POSTS:
+        return POSTS[-1]["id"] + 1
+    return 1
 
 
 if __name__ == '__main__':
