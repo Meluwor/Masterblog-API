@@ -60,7 +60,14 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
+    sort_by = request.args.get('sort')
+    sort_direction = request.args.get('direction')
+    if not sort_by and not sort_direction:
         return jsonify(POSTS)
+    is_valid_sort, sorted_posts = get_sorted_posts(sort_by,sort_direction)
+    if is_valid_sort:
+        return jsonify(sorted_posts),200
+    return jsonify({"message": sorted_posts}), 400
 
 @app.route('/api/posts', methods=['POST'])
 def add_post():
@@ -121,6 +128,30 @@ def search():
         }), 200
     searched_posts = get_searched_posts(search_title,search_content)
     return jsonify(searched_posts), 200
+
+
+def get_sorted_posts(sort_by, sort_direction):
+    """
+    This function will sort all posts by title/content in oder ASC/DESC
+    """
+    reverse = False #default
+    sort_func = lambda post: post['id'] #default
+    error_message = ''
+    if sort_by and sort_by in ['content', 'title']:
+        sort_func = lambda post: post[sort_by].lower()
+    else:
+        if sort_by:
+            #sort parameter was given but does not exist
+            error_message += f'The sort parameter: {sort_by} is not provided. '
+    if sort_direction and sort_direction in ['asc','desc']:
+        reverse = sort_direction == "desc"
+    else:
+        if sort_direction:
+            # direction parameter was given but does not exist
+            error_message += f'The direction parameter: {sort_direction} is not provided.'
+    if not error_message:
+        return True, sorted(POSTS, key=sort_func, reverse=reverse)
+    return False , error_message
 
 
 def get_searched_posts(search_title, search_content):
