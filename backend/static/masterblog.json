@@ -1,0 +1,181 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Masterblog API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Post",
+      "description": "Post API - CRUD"
+    }
+  ],
+  "paths": {
+    "/api/posts": {
+      "get": {
+        "summary": "Returns all posts also allows to sort by title/content in order ASC/DESC.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "enum": ["title", "content"],
+            "description": "Sort by title or content (optional)."
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Order by ASC or DESC (optional)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new post.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "title",
+                "content"
+              ],
+              "example": {
+                "title": "some title",
+                "content": "some content"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful operation."
+          }
+        }
+      }
+    },
+    "/api/posts/{id}": {
+      "delete": {
+        "summary": "Delete a post by given id.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a post by given id.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "title",
+                "content"
+              ],
+              "example": {
+                "title": "new title",
+                "content": "new content"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation."
+          }
+        }
+      }
+    },
+    "/api/posts/search": {
+      "get": {
+        "summary": "Returns posts by given search parameter/s.",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Post"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Title to search for."
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "type": "string",
+            "required": false,
+            "description": "Content to search for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation."
+          }
+        }
+      }
+    }
+  }
+}
