@@ -31,7 +31,10 @@
             "in": "query",
             "type": "string",
             "required": false,
-            "enum": ["title", "content"],
+            "enum": [
+              "title",
+              "content"
+            ],
             "description": "Sort by title or content (optional)."
           },
           {
@@ -160,14 +163,14 @@
             "in": "query",
             "type": "string",
             "required": false,
-            "description": "Title to search for."
+            "description": "Title to search for (optional)."
           },
           {
             "name": "content",
             "in": "query",
             "type": "string",
             "required": false,
-            "description": "Content to search for."
+            "description": "Content to search for (optional)."
           }
         ],
         "responses": {
